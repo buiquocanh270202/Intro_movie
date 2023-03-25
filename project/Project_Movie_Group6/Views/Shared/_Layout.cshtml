@@ -1,0 +1,97 @@
+﻿@using System.Text.Json;
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Project_Movie_Group6</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Project_Movie_Group6.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="https://localhost:7028/">PHIM HAY</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a href="https://localhost:7028/" style="text-decoration: none">Trang chủ</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav flex-grow-2">
+                        <form asp-controller="Home" asp-action="index" style="display: contents;">
+                            <input style="border-radius: 5px" type="text" name="searchString" placeholder="Nhập tên phim cần tìm" />
+                            <button style="margin-left: 10px; border-radius: 5px; color: blue; border-color:blue" type="submit">Tìm</button>
+                        </form>
+
+                        @if (Context.Session.GetString("admin") != null)
+                        {
+                            var person = (LoginModel)JsonSerializer.Deserialize<LoginModel>(Context.Session.GetString("admin"));
+                            <li class="nav-item">
+                                <a class="nav-link text-dark">Welcome: @person.Email</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="PersonLogin" asp-action="SignOut">SignOut</a>
+                            </li>
+                        }
+                        else if (Context.Session.GetString("account") != null)
+                        {
+                            var person = (LoginModel)JsonSerializer.Deserialize<LoginModel>(Context.Session.GetString("account"));
+                            <li class="nav-item">
+                                <a class="nav-link text-dark">Welcome: @person.Email</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="PersonLogin" asp-action="SignOut">SignOut</a>
+                            </li>
+                        }
+
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="https://localhost:7028/PersonLogin/Login">Đăng nhập</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="https://localhost:7028/PersonLogin/SignUp">Đăng ký</a>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Project_Movie_Group6 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Core Vendors JS -->
+    <script src="~/js/vendors.min.js"></script>
+
+    <!-- page js -->
+    <script src="~/vendors/chartjs/Chart.min.js"></script>
+    <script src="~/js/pages/dashboard-e-commerce.js"></script>
+
+    <!-- Core JS -->
+    <script src="~/js/app.min.js"></script>
+
+    @await RenderSectionAsync("Scripts",required:false)
+</body>
+</html>

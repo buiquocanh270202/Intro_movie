@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Project_Movie_Group6.Models.Movie>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Admin</h1>
+<div class="row">
+    <div class="col-md-3">
+        <a class="nav-link text-dark" asp-area="Admin" asp-controller="AdminMovies" asp-action="Index">Quan Ly Movies</a>
+        <a class="nav-link text-dark" asp-area="Admin" asp-controller="" asp-action="Index">Quan Ly Account</a>
+    </div>
+    <div class="col-md-9">
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                       Title
+                    </th>
+                    <th>
+                        Year
+                    </th>
+                    <th>
+                       Image
+                    </th>
+                    @*<th style="width: 300px">
+                      Description
+                    </th>*@
+                    <th>
+                        Genre
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Title
+                        </td>
+                        <td>
+                            @item.Year
+                        </td>
+                        <td>
+                            @item.Image
+                        </td>
+                        @*<td style="width: 300px" >
+                            @Html.Raw(item.Description)
+                        </td>*@
+                        <td>
+                            @item.Genre.Description
+                        </td>
+                        <td>
+                            @item.IsActive
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.MovieId">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.MovieId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+

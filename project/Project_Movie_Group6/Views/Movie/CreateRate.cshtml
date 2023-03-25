@@ -1,0 +1,111 @@
+﻿@using Project_Movie_Group6.Models;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Project_Movie_Group6.Models.Rate
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Movie movies = ViewBag.movie;// luu object phim minh click vao
+    List<Rate> rates = ViewBag.rateCreateRate;
+    List<Rate> ratesComment = ViewBag.rates;
+    Person person = ViewBag.person;
+    Rate rateOfAccount = rates.Where(x => x.PersonId == person.PersonId && x.MovieId == movies.MovieId).FirstOrDefault();
+
+
+    float avg = 0;
+    if (ViewBag.avg > 0)
+    {
+        avg = (float)ViewBag.avg;
+    }
+
+
+
+}
+
+
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <img width="400px" height="800px" src="~/images/MoviesImg/@(movies.Image)" />
+            </div>
+
+            <div class="col-md-8">
+                <div>
+                    <h1>@movies.Title</h1>
+                    <div>
+                        <a style="font-size: 20px ; font-weight: bold">Thể loại: </a><a>@movies.Genre.Description</a>
+                    </div>
+                    <div>
+                        <a style="font-size: 20px; font-weight: bold">Điểm đánh giá: </a><a>@Math.Round((decimal)avg, 2)</a>
+                    </div>
+                    <div>
+                        <a style="font-size: 20px; font-weight: bold">Mô tả: </a><a>@Html.Raw(movies.Description)</a>
+                    </div>
+
+                </div>
+                <hr width="100%" size="4px" align="center" color="red" />
+                <div>
+                    @if(@rateOfAccount == null) {
+                    <form asp-action="Add" method="POST">
+                        <input asp-for="MovieId" hidden="" value="@movies.MovieId" />
+                        <span asp-validation-for="MovieId"></span>
+
+                        <input asp-for="PersonId" hidden="" value="@person.PersonId" />
+                        <span asp-validation-for="PersonId"></span>
+
+                        <div>
+                            Điểm đánh giá:  <input asp-for="NumericRating" type="number" min="0" max="10"/>
+                            <span asp-validation-for="NumericRating"></span>
+                                
+                        </div>
+                        <div>   
+                            <p>Bình luận: </p>
+                            <textarea asp-for="Comment" style="width: 100%; height: 200px"></textarea>
+                            <span asp-validation-for="Comment"></span>
+                        </div>
+                        <button style="background-color: dodgerblue; color: white; border-radius: 5px; padding: 5px" type="submit">Đánh giá</button>
+                    </form>
+                    } else {
+                    <form asp-action="Update" method="POST">
+                        <input asp-for="MovieId" hidden="" value="@movies.MovieId" />
+                        <span asp-validation-for="MovieId"></span>
+
+                        <input asp-for="PersonId" hidden="" value="@person.PersonId" />
+                        <span asp-validation-for="PersonId"></span>
+
+                        <div>
+                                Điểm đánh giá:  <input asp-for="NumericRating" type="number" value="@rateOfAccount.NumericRating" min="0" max="10" step="0.01"/>
+                            <span asp-validation-for="NumericRating"></span>
+                        </div>
+                        <div>
+                                
+                                <p>Bình luận: </p>
+                                <input type="text" asp-for="Comment" style="width: 100%; height: 200px" value="@rateOfAccount.Comment" />
+@*                                <textarea asp-for="Comment" style="width: 100%; height: 200px">@rateOfAccount.Comment</textarea>*@                            
+                                <span asp-validation-for="Comment"></span>
+                        </div>
+                        <button style="background-color: dodgerblue; color: white; border-radius: 5px; padding: 5px" type="submit">Đánh giá</button>
+                    </form>
+                    }
+
+                </div>
+                <hr width="100%" size="4px" align="center" color="red" />
+                <div>
+                    <h2>Bình luận: </h2>
+                    @foreach (var item2 in ratesComment)
+                    {
+                        <div>
+                            <a style="font-size: 20px; font-weight: bold">@item2.Person.Fullname : </a>
+                            <a>@item2.Comment</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            }
+
+        </div>
+    </div>
+
+</body>

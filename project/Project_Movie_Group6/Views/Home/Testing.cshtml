@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Project_Movie_Group6.Models.Movie>
+@using Project_Movie_Group6.Models;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Home Page";
+    List<Movie> movies = ViewBag.movie;
+}
+<h1>List of Movies</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Genre</th>
+            <th>Average Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in ViewBag.Rate)
+        {
+            <tr>
+                <td>@movie.Title </td>
+                <td>@movie.Year</td>
+                <td>@movie.Genre.Description</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>

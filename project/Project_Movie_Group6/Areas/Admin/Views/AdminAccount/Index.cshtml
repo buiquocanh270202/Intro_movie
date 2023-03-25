@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Project_Movie_Group6.Models.Person>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Admin</h1>
+<div class="row">
+    <div class="col-md-3">
+        <a class="nav-link text-dark" asp-area="Admin" asp-controller="AdminMovies" asp-action="Index">Quan Ly Movies</a>
+        <a class="nav-link text-dark" asp-area="Admin" asp-controller="" asp-action="Index">Quan Ly Account</a>
+    </div>
+    <div class="col-md-9">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Fullname
+                    </th>
+                    <th>
+                        Gender
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Password
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        IsActive
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Fullname
+                        </td>
+                        <td>
+                            @item.Gender
+                        </td>
+                        <td>
+                            @item.Email
+                        </td>
+                        <td>
+                            @item.Password
+                        </td>
+                        <td>
+                            @item.Type
+                        </td>
+
+                        @if (item.IsActive == true)
+                        {
+                            <td>Is Active</td>
+                        }
+                        else
+                        {
+                            <td>Block</td>
+                        }
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.PersonId">Edit</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-3"></div>
+

@@ -1,0 +1,161 @@
+﻿@using Project_Movie_Group6.Models;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Movie movies = ViewBag.movie;
+    List<Rate> rates = ViewBag.rate;
+    Person person = ViewBag.person;
+    List<Person> acc = ViewBag.account;
+    float avg = 0;
+    if(ViewBag.avg > 0)
+    {
+        avg = (float)ViewBag.avg;
+    }
+}
+<style>
+    
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <img width="400px" height="800px" src="~/images/MoviesImg/@(movies.Image)" />
+            </div>
+            
+            <div class="col-md-8">
+                <div>
+                    <h1>@movies.Title</h1>
+                    <div>
+                        <a style="font-size: 20px ; font-weight: bold">Thể loại: </a><a>@movies.Genre.Description</a>
+                    </div>
+                    <div>
+                            <a style="font-size: 20px; font-weight: bold">Điểm đánh giá: </a><a>@Math.Round((decimal)avg, 2)</a>
+                    </div>
+                    <div>
+                            <a style="font-size: 20px; font-weight: bold">Mô tả: </a><a>
+                            @Html.Raw(movies.Description)
+                        </a>
+                    </div>
+                        @if (Context.Session.GetString("account") != null)
+                        {
+                        <a asp-action="CreateRate" asp-route-id="@movies.MovieId"><button style="background-color: dodgerblue; color: white; border-radius: 5px">Đánh giá</button></a>
+                    }
+                    else if (Context.Session.GetString("admin") != null)
+                    {
+                        <button id="myBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal123" style="background-color: dodgerblue; color: white; border-radius: 5px">Đánh giá</button>
+
+                    }
+                    else
+                        {
+                            <button id="myBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="background-color: dodgerblue; color: white; border-radius: 5px">Đánh giá</button>
+                        }
+                </div>
+                <hr width="100%" size="4px" align="center" color=" red" />
+                <div>
+                        <h2>Bình luận: </h2>
+                    @foreach (var item2 in rates)
+                    {
+                        <div>
+                            <a style="font-size: 20px; font-weight: bold">@item2.Person.Fullname : </a>
+                            <a>@item2.Comment</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            
+        </div>
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Vui lòng <a class="nav-link text-dark" asp-area="" asp-controller="PersonLogin" asp-action="Login" style="display:inline; font-weight: bold; padding: 0px">đăng nhập</a> để bình luận</p>
+                <p>Nếu chưa có tài khoản, vui lòng <a class="nav-link text-dark" asp-area="" asp-controller="PersonLogin" asp-action="Login" style="display:inline;font-weight: bold; padding: 0px">đăng ký</a> để tiếp tục</p>
+            </div>
+
+        </div>
+
+        <div id="myModal123" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Bạn đang là admin, nếu muốn đánh giá phim, vui lòng <a class="nav-link text-dark" asp-area="" asp-controller="PersonLogin" asp-action="Login" style="display:inline;font-weight: bold; padding: 0px">đăng ký</a> tài khoản người dùng</p>
+            </div>
+
+        </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    
+
+</body>

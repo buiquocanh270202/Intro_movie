@@ -1,0 +1,86 @@
+﻿@using Project_Movie_Group6.Models;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<Project_Movie_Group6.Models.Movie>
+@addTagHelper *, PagedList.Core.Mvc
+
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Home Page" + CurrentPage ;
+
+    List<Movie> movies = ViewBag.movie;
+    List<Genre> genres = ViewBag.gender;
+    List<Rate> averageRate = ViewBag.Rates;
+
+    var result = from r in averageRate
+                 group r by r.MovieId into g
+                 select new
+                 {
+                     MovieID = g.Key,
+                     Average = g.Average(r => r.NumericRating)
+                 };
+}
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <ul style="list-style-type: none">
+                    <h3>Thể loại</h3>
+                    @foreach (var item in genres)
+                    {
+                        <li>
+                            <a href="/Home/Index/@item.GenreId">@item.Description</a>
+                        </li>
+                    }
+                    
+                </ul>
+            </div>
+
+            <div class="col-md-10">
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        if (item.IsActive == true){
+                        <div class="col-md-3" style="border-style: solid; margin: 25px;max-width: 20%; padding: 0px 0px 30px 0px">
+
+                            <img width="100%" height="50%" alt="user" src="~/images/MoviesImg/@(item.Image)">
+                            <div style="margin: 20px 0px 10px 20px">
+                                <h4><a asp-controller="Movie" asp-action="index" asp-route-id="@item.MovieId" style="text-decoration: none; margin-bottom: 10px">@item.Title</a></h4>
+                                <ul style="list-style-type: none; padding: 0px">
+                                    <li>Năm: @item.Year</li>
+                                    <li>Thể loại : @item.Genre.Description</li>
+                                    <li>
+                                        Điểm: @foreach (var m in result)
+                                        {
+                                            if (item.MovieId == m.MovieID)
+                                            {
+                                                @Math.Round((decimal)m.Average, 2)
+                                            }
+                                        }
+
+                                    </li>
+                                </ul>
+                            </div>
+                            <a asp-controller="Movie" asp-action="index" asp-route-id="@item.MovieId" style="text-decoration: none; margin-bottom: 10px"><button style="border-radius: 4px;background-color: dodgerblue;color: white; margin-left: 100px; padding: 5px">Đánh giá</button></a>
+                        </div>
+                    }
+                    }
+                </div>
+            </div>
+
+            <div aria-label="Page navigation example">
+                <ul class="pagtination">
+                    <pager class="pager-container" list="@Model" asp-controller="Home" asp-action="Index"/>
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+
+
+
+
